@@ -1,0 +1,52 @@
+{
+  "projects": [
+    {
+      "name": "Contributor Launchpad",
+      "owner": "Maya Chen",
+      "status": "active",
+      "priority": "high",
+      "summary": "Help new contributors make their first meaningful contribution.",
+      "recentActivity": "Published the first-contribution checklist."
+    },
+    {
+      "name": "Documentation Refresh",
+      "owner": "Jordan Ellis",
+      "status": "active",
+      "priority": "medium",
+      "summary": "Make setup guides easier to follow and maintain.",
+      "recentActivity": "Reviewed installation steps across three environments."
+    },
+    {
+      "name": "Release Readiness",
+      "owner": "Sam Rivera",
+      "status": "at-risk",
+      "priority": "high",
+      "summary": "Coordinate the checks needed for a reliable release.",
+      "recentActivity": "Packaging checks uncovered a blocking compatibility issue."
+    },
+    {
+      "name": "Accessibility Review",
+      "owner": "Alex Morgan",
+      "status": "at-risk",
+      "priority": "high",
+      "summary": "Remove barriers from the core contributor experience.",
+      "recentActivity": "Keyboard testing found a focus-order issue."
+    },
+    {
+      "name": "Community Showcase",
+      "owner": "Priya Shah",
+      "status": "paused",
+      "priority": "low",
+      "summary": "Highlight useful projects and the people behind them.",
+      "recentActivity": "Draft collection is paused while the team focuses on release work."
+    },
+    {
+      "name": "Issue Template Cleanup",
+      "owner": "Leo Martin",
+      "status": "completed",
+      "priority": "low",
+      "summary": "Help contributors report problems with clearer context.",
+      "recentActivity": "Published the revised bug and feature templates."
+    }
+  ]
+}

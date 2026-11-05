@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <p class="sr-only" id="dashboard-status" role="status" aria-atomic="true"></p>
+    <p class="sr-only" id="dashboard-alert" role="alert" aria-atomic="true"></p>
+    <main class="dashboard" data-state="loading" aria-busy="false">
+      <header class="dashboard-header">
+        <p class="dashboard-eyebrow">CONTRIBUTOR WORKSPACE</p>
+        <h1>Project Pulse</h1>
+        <p class="dashboard-intro">A clear view of the work moving our team forward.</p>
+        <dl class="dashboard-stats" aria-label="Project overview" hidden>
+          <div class="dashboard-stat">
+            <dt class="dashboard-stat__label">Total projects</dt>
+            <dd class="dashboard-stat__value" id="stat-total"></dd>
+          </div>
+          <div class="dashboard-stat">
+            <dt class="dashboard-stat__label">Active</dt>
+            <dd class="dashboard-stat__value" id="stat-active"></dd>
+          </div>
+          <div class="dashboard-stat">
+            <dt class="dashboard-stat__label">At risk</dt>
+            <dd class="dashboard-stat__value" id="stat-at-risk"></dd>
+          </div>
+        </dl>
+      </header>
+      <section class="projects-section" aria-labelledby="projects-heading" hidden>
+        <div class="section-heading">
+          <h2 id="projects-heading">Projects</h2>
+          <p class="section-heading__description">Ownership, priorities, and the latest progress.</p>
+        </div>
+        <div class="project-grid"></div>
+      </section>
+      <div class="dashboard-state" data-kind="loading" hidden>
+        <h2 class="dashboard-state__title"></h2>
+        <p class="dashboard-state__message"></p>
+      </div>
+      <noscript>
+        <div class="dashboard-state" data-kind="error">
+          <h2 class="dashboard-state__title">JavaScript is required</h2>
+          <p class="dashboard-state__message">Enable JavaScript and reload to view project data.</p>
+        </div>
+      </noscript>
+    </main>
+    <script>
+      "use strict";
+
+      (() => {
+        const dashboard = document.querySelector(".dashboard");
+        const stats = document.querySelector(".dashboard-stats");
+        const section = document.querySelector(".projects-section");
+        const grid = document.querySelector(".project-grid");
+        const panel = document.querySelector("div.dashboard-state");
+        const panelTitle = panel.querySelector(".dashboard-state__title");
+        const panelMessage = panel.querySelector(".dashboard-state__message");
+        const statusRegion = document.getElementById("dashboard-status");
+        const alertRegion = document.getElementById("dashboard-alert");
+        const totalStat = document.getElementById("stat-total");
+        const activeStat = document.getElementById("stat-active");
+        const riskStat = document.getElementById("stat-at-risk");
+        const statusLabels = new Map([
+          ["active", "Active"],
+          ["at-risk", "At risk"],
+          ["paused", "Paused"],
+          ["completed", "Completed"]
+        ]);
+        const priorityLabels = new Map([
+          ["high", "High"],
+          ["medium", "Medium"],
+          ["low", "Low"]
+        ]);
+        const fields = ["name", "owner", "status", "recentActivity", "priority", "summary"];
+
+        function validateProjects(data) {
+          if (data === null || typeof data !== "object" || Array.isArray(data) ||
+              !Array.isArray(data.projects)) {
+            throw new Error("Project data must be an object containing a projects array.");
+          }
+          return data.projects.map((project, index) => {
+            if (project === null || typeof project !== "object" || Array.isArray(project)) {
+              throw new Error(`Project ${index + 1} must be an object.`);
+            }
+            const validated = {};
+            for (const field of fields) {
+              if (!Object.hasOwn(project, field) ||
+                  typeof project[field] !== "string" || project[field].trim() === "") {
+                throw new Error(`Project ${index + 1} requires a nonempty ${field} string.`);
+              }
+              validated[field] = project[field].trim();
+            }
+            return validated;
+          });
+        }
+
+        function element(tag, className, text) {
+          const node = document.createElement(tag);
+          node.className = className;
+          if (text !== undefined) node.textContent = text;
+          return node;
+        }
+
+        function badge(value, labels, className, dataKey) {
+          const key = value.toLowerCase();
+          const node = element("span", className);
+          node.dataset[dataKey] = labels.has(key) ? key : "unknown";
+          if (dataKey === "status") {
+            node.append(element("span", "sr-only", "Status: "));
+          }
+          const label = document.createElement("span");
+          label.textContent = labels.get(key) ?? value;
+          node.append(label);
+          return node;
+        }
+
+        function detail(label, value, className, activity = false) {
+          const row = element("div", "project-card__detail" +
+            (activity ? " project-card__detail--activity" : ""));
+          row.append(element("dt", "", label));
+          const description = element("dd", className);
+          if (typeof value === "string") description.textContent = value;
+          else description.append(value);
+          row.append(description);
+          return row;
+        }
+
+        function projectCard(project, index) {
+          const card = element("article", "project-card");
+          const nameId = `project-name-${index}`;
+          card.setAttribute("aria-labelledby", nameId);
+          const header = element("div", "project-card__header");
+          const name = element("h3", "project-card__name", project.name);
+          name.id = nameId;
+          header.append(name, badge(project.status, statusLabels, "status-badge", "status"));
+          const details = element("dl", "project-card__details");
+          details.append(
+            detail("Owner", project.owner, "project-card__owner"),
+            detail("Priority", badge(project.priority, priorityLabels, "priority-badge", "priority"), ""),
+            detail("Recent activity", project.recentActivity, "project-card__activity", true)
+          );
+          card.append(header, element("p", "project-card__summary", project.summary), details);
+          return card;
+        }
+
+        function showPanel(kind, title, message) {
+          dashboard.dataset.state = kind;
+          stats.hidden = true;
+          section.hidden = true;
+          grid.replaceChildren();
+          totalStat.textContent = "";
+          activeStat.textContent = "";
+          riskStat.textContent = "";
+          panel.dataset.kind = kind;
+          panelTitle.textContent = title;
+          panelMessage.textContent = message;
+          panel.hidden = false;
+        }
+
+        async function loadProjects() {
+          dashboard.setAttribute("aria-busy", "true");
+          showPanel("loading", "Loading projects", "Gathering the latest project snapshot.");
+          alertRegion.textContent = "";
+          statusRegion.textContent = "Loading projects.";
+          try {
+            const response = await fetch("project-data.json");
+            if (!response.ok) throw new Error(`Project request failed: HTTP ${response.status}.`);
+            const projects = validateProjects(await response.json());
+            if (projects.length === 0) {
+              showPanel("empty", "No projects yet",
+                "Projects will appear here when they are added to the project dataset.");
+              dashboard.setAttribute("aria-busy", "false");
+              statusRegion.textContent = "No projects found.";
+              return;
+            }
+            const cards = document.createDocumentFragment();
+            projects.forEach((project, index) => cards.append(projectCard(project, index)));
+            grid.replaceChildren(cards);
+            totalStat.textContent = String(projects.length);
+            activeStat.textContent = String(projects.filter(
+              project => project.status.toLowerCase() === "active").length);
+            riskStat.textContent = String(projects.filter(
+              project => project.status.toLowerCase() === "at-risk").length);
+            panel.hidden = true;
+            stats.hidden = false;
+            section.hidden = false;
+            dashboard.dataset.state = "ready";
+            dashboard.setAttribute("aria-busy", "false");
+            statusRegion.textContent = `${projects.length} ${projects.length === 1 ? "project" : "projects"} loaded.`;
+          } catch {
+            const message = "Project data could not be loaded. Check the data file and reload the page.";
+            showPanel("error", "Unable to load projects", message);
+            dashboard.setAttribute("aria-busy", "false");
+            statusRegion.textContent = "";
+            alertRegion.textContent = message;
+          }
+        }
+
+        loadProjects();
+      })();
+    </script>
+  </body>
+</html>

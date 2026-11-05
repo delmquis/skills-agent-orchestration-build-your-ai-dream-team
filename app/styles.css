@@ -1,0 +1,357 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd {
+  margin: 0;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 32px 20px 48px;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.dashboard-eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  color: #4338ca;
+  background: #eef2ff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.dashboard-header h1 {
+  font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.dashboard-intro {
+  max-width: 65ch;
+  margin-top: 16px;
+  color: #475569;
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.dashboard-stat {
+  min-width: 0;
+  padding: 20px 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgb(15 23 42 / 3%);
+}
+
+.dashboard-stat__label {
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dashboard-stat__value {
+  margin-top: 4px;
+  font-size: 2rem;
+  line-height: 1.25;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.projects-section,
+.section-heading,
+.project-grid,
+.project-card__header,
+.project-card__details,
+.project-card__detail {
+  min-width: 0;
+}
+
+.section-heading {
+  margin-bottom: 20px;
+}
+
+.section-heading h2,
+.dashboard-state__title {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.section-heading__description {
+  margin-top: 8px;
+  color: #475569;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.project-card {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 5%);
+  overflow-wrap: anywhere;
+}
+
+.project-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.project-card__name {
+  flex: 1 1 160px;
+  min-width: 0;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.project-card__summary {
+  margin-top: 16px;
+  color: #475569;
+}
+
+.project-card__details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px 16px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.project-card__detail dt {
+  margin-bottom: 6px;
+  color: #475569;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.project-card__owner {
+  font-weight: 600;
+}
+
+.project-card__detail--activity {
+  grid-column: 1 / -1;
+}
+
+.project-card__activity {
+  color: #475569;
+}
+
+.status-badge,
+.priority-badge {
+  display: inline-block;
+  max-width: 100%;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #334155;
+  background: #f1f5f9;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  font-weight: 700;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.status-badge[data-status="active"] {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.status-badge[data-status="at-risk"],
+.priority-badge[data-priority="medium"] {
+  color: #9a3412;
+  background: #ffedd5;
+}
+
+.status-badge[data-status="completed"] {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.status-badge[data-status="paused"],
+.status-badge[data-status="unknown"],
+.priority-badge[data-priority="low"],
+.priority-badge[data-priority="unknown"] {
+  color: #334155;
+  background: #f1f5f9;
+}
+
+.priority-badge[data-priority="high"] {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.dashboard-state,
+.dashboard > noscript {
+  display: block;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 5%);
+}
+
+.dashboard-state__message {
+  max-width: 65ch;
+  margin-top: 12px;
+  color: #475569;
+}
+
+.dashboard-state[data-kind="loading"] {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+}
+
+.dashboard-state[data-kind="loading"] .dashboard-state__title {
+  color: #4338ca;
+}
+
+.dashboard-state[data-kind="error"],
+.dashboard > noscript {
+  border-color: #fca5a5;
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.dashboard-state[data-kind="error"] .dashboard-state__message,
+.dashboard > noscript .dashboard-state__message {
+  color: #991b1b;
+}
+
+a {
+  color: #4338ca;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+
+a:focus-visible {
+  outline: 3px solid #4338ca;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Do not expose a styled, empty fallback when scripting is enabled. */
+@media (scripting: enabled) {
+  noscript {
+    display: none !important;
+  }
+}
+
+@media (min-width: 480px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .project-card__details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 700px) {
+  .dashboard {
+    padding: 40px;
+  }
+
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .project-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Intentionally static: no animation, transitions, or hover elevation. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (forced-colors: active) {
+  .dashboard-stat,
+  .project-card,
+  .project-card__details,
+  .dashboard-state,
+  .dashboard > noscript,
+  .status-badge,
+  .priority-badge {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  .dashboard-eyebrow {
+    border: 1px solid CanvasText;
+  }
+
+  a:focus-visible {
+    outline-color: Highlight;
+  }
+}
